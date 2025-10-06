@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  h2 Todo List
+
+  form(method="GET" action="/" style="margin-bottom: 1rem;")
+    label(for="status") Фильтр:
+    select(name="status" id="status" onchange="this.form.submit()")
+      option(value="all" selected=(status !== 'active' && status !== 'completed')) Все задачи
+      option(value="active" selected=(status==='active')) Активные задачи
+      option(value="completed" selected=(status==='completed')) Выполненные задачи
+
+  if tasks.length
+    ul
+      each task in tasks
+        li
+          span(class=task.completed ? "completed" : "") #{task.title}
+          div.cta
+            form(action=`/${task.id}/toggle`, method="post") 
+                button(class="action" type="submit") Toggle
+            form(action=`/${task.id}/delete`, method="post") 
+                button(class="action delete" type="submit") Delete
+  else
+    p No tasks yet. Add one!

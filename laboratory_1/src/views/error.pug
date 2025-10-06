@@ -1,0 +1,8 @@
+extends layout 
+
+block content
+    h2 Что-то пошло не так! Ошибки:
+    div 
+        each error in errors 
+            p= error
+    a.action(href="/") ← Вернуться на главную

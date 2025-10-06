@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  h2 Add a New Task
+  form(action="/new" method="POST")
+    label(for="title") Task title:
+    input(type="text" name="title" id="title" placeholder="What do you need to do?" required)
+    button(type="submit") Add Task
