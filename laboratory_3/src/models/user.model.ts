@@ -1,11 +1,11 @@
 import {Model, DataTypes, Sequelize} from "sequelize";
+import {Role} from "@/models/role.model";
 
 export class User extends Model {
     public id!: number;
     public username!: string;
     public email!: string;
     public password!: string;
-    public role!: 'user' | 'admin';
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
 }
@@ -37,14 +37,6 @@ export const UserFactory = (sequelize: Sequelize) => {
             password: {
                 type: DataTypes.TEXT,
                 allowNull: false,
-            },
-            role: {
-                type: DataTypes.STRING(20),
-                allowNull: false,
-                defaultValue: 'user',
-                validate: {
-                    isIn: [['user', 'admin']],
-                },
             },
         },
         {

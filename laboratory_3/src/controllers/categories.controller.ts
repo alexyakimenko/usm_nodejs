@@ -18,7 +18,7 @@ export const getCategory = async (req: Request, res: Response) => {
 export const createCategory = async (req: Request, res: Response) => {
     const { name } = req.body;
     const category = await Category.create({ name });
-    res.status(201).json(category);
+    return res.status(201).json(category);
 }
 
 export const updateCategory = async (req: Request, res: Response) => {

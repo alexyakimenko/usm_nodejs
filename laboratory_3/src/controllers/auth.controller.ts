@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {User} from "@/models";
+import {Role, User} from "@/models";
 import config from "@/config/config"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
@@ -29,6 +29,9 @@ export const register = async (req: Request, res: Response) => {
         password: hash,
     })
 
+    // @ts-ignore
+    await user.addRole(await Role.findOne({where: {name: 'user'}}))
+
     return res.status(201).send({
         message: 'User successfully registered',
     })
@@ -54,7 +57,6 @@ export const login = async (req: Request, res: Response) => {
     const token = jwt.sign({
         uid: user.id,
         username: user.username,
-        role: user.role,
     },
     config.auth.jwt,{
         expiresIn: '24h',
@@ -70,7 +72,8 @@ export const profile = async (req: Request, res: Response) => {
     }
 
     const user = await User.findByPk(tokenUser.uid, {
-        attributes: ['id', 'username', 'email', 'role'],
+        attributes: ['id', 'username', 'email' ],
+        include: [{model: Role, as: "roles", attributes: ['name'], through: {attributes: []}},],
     })
 
     return res.status(200).send({user})

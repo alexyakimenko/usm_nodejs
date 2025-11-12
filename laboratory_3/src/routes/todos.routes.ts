@@ -1,6 +1,7 @@
-import { Router } from "express";
+import {Router} from "express";
 import * as controller from "@/controllers/todos.controller";
-import {authenticate, isOwnerOrAdmin} from "@/middleware/auth.middleware";
+import {authenticate, authorize} from "@/middleware/auth.middleware";
+import {Permissions} from "@/models/permission.model";
 
 const router = Router();
 
@@ -86,7 +87,7 @@ const router = Router();
  *                     currentPage:
  *                       type: integer
  */
-router.get("/", [authenticate], controller.getTodos);
+router.get("/", [authenticate, authorize([Permissions.ViewTodo])], controller.getTodos);
 
 /**
  * @swagger
@@ -106,7 +107,7 @@ router.get("/", [authenticate], controller.getTodos);
  *       404:
  *         description: Задача не найдена
  */
-router.get("/:id", [authenticate], controller.getTodo);
+router.get("/:id", [authenticate, authorize([Permissions.ViewTodo])], controller.getTodo);
 
 /**
  * @swagger
@@ -170,7 +171,7 @@ router.post("/", [authenticate], controller.createTodo);
  *       404:
  *         description: Не найдено
  */
-router.put("/:id", [authenticate, isOwnerOrAdmin], controller.updateTodo);
+router.put("/:id", [authenticate, authorize([Permissions.ChangeTodo], true)], controller.updateTodo);
 
 /**
  * @swagger
@@ -190,7 +191,7 @@ router.put("/:id", [authenticate, isOwnerOrAdmin], controller.updateTodo);
  *       404:
  *         description: Задача не найдена
  */
-router.patch("/:id/toggle", [authenticate, isOwnerOrAdmin], controller.toggleTodo);
+router.patch("/:id/toggle", [authenticate, authorize([Permissions.ChangeTodo], true)], controller.toggleTodo);
 
 /**
  * @swagger
@@ -210,6 +211,6 @@ router.patch("/:id/toggle", [authenticate, isOwnerOrAdmin], controller.toggleTod
  *       404:
  *         description: Не найдено
  */
-router.delete("/:id", [authenticate, isOwnerOrAdmin], controller.deleteTodo);
+router.delete("/:id", [authenticate, authorize([Permissions.ChangeTodo], true)], controller.deleteTodo);
 
 export default router;

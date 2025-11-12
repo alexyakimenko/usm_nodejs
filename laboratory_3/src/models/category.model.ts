@@ -14,7 +14,7 @@ export const CategoryFactory = (sequelize: Sequelize) => {
     }, {
         sequelize,
         tableName: 'categories',
-        timestamps: true,
+        timestamps: false,
         underscored: true,
     });
     return Category;
