@@ -5,6 +5,7 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import ValidationError from "@/errors/app/validation/validation.error";
 import AuthenticationError from "@/errors/app/authentication/authentication.error";
+import logger from "@/utils/logger";
 
 export const register = async (req: Request, res: Response) => {
     const {username, email, password} = req.body;
@@ -29,6 +30,10 @@ export const register = async (req: Request, res: Response) => {
 
     // @ts-ignore
     await user.addRole(await Role.findOne({where: {name: 'user'}}))
+
+    logger.info("User registered", {
+        uid: user.id,
+    })
 
     return res.status(201).send({
         message: 'User successfully registered',
@@ -55,6 +60,10 @@ export const login = async (req: Request, res: Response) => {
     config.auth.jwt,{
         expiresIn: '24h',
     });
+
+    logger.info("User logged in", {
+        uid: user.id,
+    })
 
     return res.status(200).send({token})
 }

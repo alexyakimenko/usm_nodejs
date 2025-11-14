@@ -1,6 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import AppError from "@/errors/app/app.error";
 import ValidationError, {ValidationErrorDetail} from "@/errors/app/validation/validation.error";
+import logger from "@/utils/logger";
 
 interface ResponseObject {
     status: "error" | "success";
@@ -26,7 +27,7 @@ const errorHandler = (error: Error, req: Request, res: Response, next: NextFunct
         response.stack = error.stack;
     }
 
-    console.error(`[${new Date().toISOString()}] ${error.name}: ${error.message}`);
+    logger.error(`${error.name}: ${error.message}`);
 
     res.status(code).json(response);
 }

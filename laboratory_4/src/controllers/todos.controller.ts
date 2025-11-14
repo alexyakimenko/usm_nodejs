@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Op } from "sequelize";
 import {Category, Todo} from "@/models";
 import NotFoundError from "@/errors/app/not-found/not-found.error";
+import logger from "@/utils/logger";
 
 export const getTodos = async (req: Request, res: Response) => {
     const { category, search, sort = "created_at:desc", page = 1, limit = 10 } = req.query;
@@ -46,6 +47,11 @@ export const createTodo = async (req: Request, res: Response) => {
     const user_id = (req as any).user.uid;
 
     const todo = await Todo.create({ title, category_id, due_date, user_id });
+
+    logger.info("Todo created", {
+        todo_id: todo.id
+    })
+
     res.status(201).json(todo);
 };
 
@@ -60,6 +66,10 @@ export const updateTodo = async (req: Request, res: Response) => {
     if (due_date !== undefined) todo.due_date = due_date;
 
     await todo.save();
+
+    logger.info("Todo updated", {
+        todo_id: todo.id
+    })
     res.json(todo);
 };
 
@@ -68,6 +78,10 @@ export const toggleTodo = async (req: Request, res: Response) => {
     if (!todo) throw new NotFoundError("Todo not found");
     todo.completed = !todo.completed;
     await todo.save();
+
+    logger.info("Todo toggled", {
+        todo_id: todo.id
+    })
     res.json(todo);
 };
 
@@ -75,6 +89,10 @@ export const deleteTodo = async (req: Request, res: Response) => {
     const todo = await Todo.findByPk(req.params.id);
     if (!todo) throw new NotFoundError("Todo not found");
     await todo.destroy();
+
+    logger.info("Todo deleted", {
+        todo_id: todo.id
+    })
     res.status(204).send();
 };
 
