@@ -10,6 +10,9 @@ interface Config {
     app: {
         port: number;
         title: string;
+        sentry: {
+            dsn: string;
+        }
     },
     auth: {
         jwt: string;
@@ -26,10 +29,13 @@ const config: Config = {
     app: {
         port: Number(process.env.APP_PORT),
         title: process.env.APP_TITLE!,
+        sentry: {
+            dsn: process.env.SENTRY_DSN!,
+        },
     },
     auth: {
         jwt: process.env.JWT_SECRET!,
-    }
+    },
 }
 
 export default config;

@@ -89,7 +89,7 @@ const router = Router();
  *                     currentPage:
  *                       type: integer
  */
-router.get("/", [authenticate, authorize([Permissions.ViewTodo])], paramTodoValidator, validate, controller.getTodos);
+router.get("/", [authenticate, authorize([Permissions.ViewTodo])], controller.getTodos);
 
 /**
  * @swagger
