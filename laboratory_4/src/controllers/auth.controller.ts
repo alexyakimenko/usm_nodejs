@@ -3,20 +3,11 @@ import {Role, User} from "@/models";
 import config from "@/config/config"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
-import ValidationError, {ValidationErrorDetails} from "@/errors/app/validation/validation.error";
+import ValidationError from "@/errors/app/validation/validation.error";
 import AuthenticationError from "@/errors/app/authentication/authentication.error";
 
 export const register = async (req: Request, res: Response) => {
     const {username, email, password} = req.body;
-
-    if (!username || !email || !password) {
-        const errors: ValidationErrorDetails = {}
-        if(!username) errors.username = "Username is required"
-        if(!email) errors.email = "Email is required"
-        if(!password) errors.password = "Password is required"
-
-        throw new ValidationError("Validation errors", errors);
-    }
 
     const takenUsername = await User.findOne({where: {username}});
     if (takenUsername) {
@@ -46,14 +37,6 @@ export const register = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
     const {username, password} = req.body;
-
-    if (!username || !password) {
-        const errors: ValidationErrorDetails = {}
-        if(!username) errors.username = "Username is required"
-        if(!password) errors.password = "Password is required"
-
-        throw new ValidationError("Validation errors", errors);
-    }
 
     const user = await User.findOne({where: {username}});
     if (!user) {

@@ -1,11 +1,11 @@
 import {NextFunction, Request, Response} from "express";
 import AppError from "@/errors/app/app.error";
-import ValidationError, {ValidationErrorDetails} from "@/errors/app/validation/validation.error";
+import ValidationError, {ValidationErrorDetail} from "@/errors/app/validation/validation.error";
 
 interface ResponseObject {
     status: "error" | "success";
     message: string;
-    errors?: ValidationErrorDetails;
+    errors?: ValidationErrorDetail[];
     stack?: string;
 }
 

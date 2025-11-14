@@ -1,17 +1,18 @@
 import AppError from "@/errors/app/app.error";
 
-export interface ValidationErrorDetails {
-    [key: string]: string;
+export interface ValidationErrorDetail {
+    field: string;
+    message: string;
 }
 
-class ValidationError extends AppError {
-    public readonly errors: ValidationErrorDetails;
+class ValidationAppError extends AppError {
+    public readonly errors: ValidationErrorDetail[];
 
-    constructor(message: string = 'Validation Failed', errors: ValidationErrorDetails) {
+    constructor(message: string = 'Validation Failed', errors: ValidationErrorDetail[]) {
         super(message, 400);
         this.errors = errors;
         this.name = "ValidationError";
     }
 }
 
-export default ValidationError;
+export default ValidationAppError;

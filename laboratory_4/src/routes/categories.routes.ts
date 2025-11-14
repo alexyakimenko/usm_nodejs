@@ -2,6 +2,8 @@ import {Router} from "express";
 import * as controller from "@/controllers/categories.controller";
 import {authenticate, authorize} from "@/middleware/auth.middleware";
 import {Permissions} from "@/models/permission.model";
+import {createCategoryValidator, paramCategoryValidator} from "@/validators/category.validator";
+import validate from "@/middleware/validate.middleware";
 
 const router = Router();
 
@@ -65,7 +67,7 @@ router.get("/:id", [authenticate], controller.getCategory);
  *       201:
  *         description: Создана
  */
-router.post("/", [authenticate, authorize([Permissions.ChangeCategory])], controller.createCategory);
+router.post("/", [authenticate, authorize([Permissions.ChangeCategory])], createCategoryValidator, validate, controller.createCategory);
 
 /**
  * @swagger
@@ -94,7 +96,7 @@ router.post("/", [authenticate, authorize([Permissions.ChangeCategory])], contro
  *       404:
  *         description: Не найдена
  */
-router.put("/:id", [authenticate, authorize([Permissions.ChangeCategory])], controller.updateCategory);
+router.put("/:id", [authenticate, authorize([Permissions.ChangeCategory])], paramCategoryValidator, validate, controller.updateCategory);
 
 /**
  * @swagger
@@ -114,6 +116,6 @@ router.put("/:id", [authenticate, authorize([Permissions.ChangeCategory])], cont
  *       404:
  *         description: Не найдена
  */
-router.delete("/:id", [authenticate, authorize([Permissions.ChangeCategory])], controller.deleteCategory);
+router.delete("/:id", [authenticate, authorize([Permissions.ChangeCategory])], paramCategoryValidator, validate, controller.deleteCategory);
 
 export default router;

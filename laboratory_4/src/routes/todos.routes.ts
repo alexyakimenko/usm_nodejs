@@ -2,6 +2,8 @@ import {Router} from "express";
 import * as controller from "@/controllers/todos.controller";
 import {authenticate, authorize} from "@/middleware/auth.middleware";
 import {Permissions} from "@/models/permission.model";
+import validate from "@/middleware/validate.middleware";
+import {createTodoValidator, paramTodoValidator} from "@/validators/todo.validator";
 
 const router = Router();
 
@@ -87,7 +89,7 @@ const router = Router();
  *                     currentPage:
  *                       type: integer
  */
-router.get("/", [authenticate, authorize([Permissions.ViewTodo])], controller.getTodos);
+router.get("/", [authenticate, authorize([Permissions.ViewTodo])], paramTodoValidator, validate, controller.getTodos);
 
 /**
  * @swagger
@@ -107,7 +109,7 @@ router.get("/", [authenticate, authorize([Permissions.ViewTodo])], controller.ge
  *       404:
  *         description: Задача не найдена
  */
-router.get("/:id", [authenticate, authorize([Permissions.ViewTodo])], controller.getTodo);
+router.get("/:id", [authenticate, authorize([Permissions.ViewTodo])], paramTodoValidator, validate, controller.getTodo);
 
 /**
  * @swagger
@@ -135,7 +137,7 @@ router.get("/:id", [authenticate, authorize([Permissions.ViewTodo])], controller
  *       201:
  *         description: Задача успешно создана
  */
-router.post("/", [authenticate], controller.createTodo);
+router.post("/", [authenticate], createTodoValidator, validate, controller.createTodo);
 
 /**
  * @swagger
@@ -171,7 +173,7 @@ router.post("/", [authenticate], controller.createTodo);
  *       404:
  *         description: Не найдено
  */
-router.put("/:id", [authenticate, authorize([Permissions.ChangeTodo], true)], controller.updateTodo);
+router.put("/:id", [authenticate, authorize([Permissions.ChangeTodo], true)], paramTodoValidator, validate, paramTodoValidator, validate, controller.updateTodo);
 
 /**
  * @swagger
@@ -191,7 +193,7 @@ router.put("/:id", [authenticate, authorize([Permissions.ChangeTodo], true)], co
  *       404:
  *         description: Задача не найдена
  */
-router.patch("/:id/toggle", [authenticate, authorize([Permissions.ChangeTodo], true)], controller.toggleTodo);
+router.patch("/:id/toggle", [authenticate, authorize([Permissions.ChangeTodo], true)], paramTodoValidator, validate, controller.toggleTodo);
 
 /**
  * @swagger
@@ -211,6 +213,6 @@ router.patch("/:id/toggle", [authenticate, authorize([Permissions.ChangeTodo], t
  *       404:
  *         description: Не найдено
  */
-router.delete("/:id", [authenticate, authorize([Permissions.ChangeTodo], true)], controller.deleteTodo);
+router.delete("/:id", [authenticate, authorize([Permissions.ChangeTodo], true)], paramTodoValidator, validate, controller.deleteTodo);
 
 export default router;
